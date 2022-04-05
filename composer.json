@@ -1,0 +1,26 @@
+{
+    "name": "vuphuong87/omnipay-foxpay",
+    "description": "Foxpay Payment gateway for Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "foxpay"
+    ],
+    "type": "library",
+    "require": {
+        "omnipay/common": "^3.0",
+        "cakephp/chronos": "^1.1",
+        "php-http/guzzle6-adapter": "^1.1|^2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vu Phuong",
+            "email": "vuphuong87@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Omnipay\\Foxpay\\" : "src/" }
+    }
+}
