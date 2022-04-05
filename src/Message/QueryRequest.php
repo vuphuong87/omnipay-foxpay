@@ -26,9 +26,7 @@ class QueryRequest extends AbstractRequest
 
         $rawHash = '';
         foreach ($order as $key => $value) {
-            if($value) {
-                $rawHash .= $value;
-            }
+            $rawHash .= is_bool($value) ? ($value ? "true" : "false") : $value;
         }
 
         $order['signature'] = hash('sha256', $rawHash.$secretKey);

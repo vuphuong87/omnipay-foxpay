@@ -27,9 +27,7 @@ class CompletePurchaseRequest extends AbstractRequest
     {
         $rawHash = '';
         foreach ($data as $key => $value) {
-            if($value) {
-                $rawHash .= $value;
-            }
+            $rawHash .= is_bool($value) ? ($value ? "true" : "false") : $value;
         }
 
         return hash('sha256', $rawHash.$this->getSecretKey());
