@@ -42,6 +42,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('terminalId', $terminalId);
     }
 
+    public function getReturnToken()
+    {
+        return $this->getParameter('returnToken');
+    }
+
+    public function setReturnToken($returnToken)
+    {
+        return $this->setParameter('returnToken', $returnToken);
+    }
+
     public function getSignature()
     {
         return $this->getParameter('signature');

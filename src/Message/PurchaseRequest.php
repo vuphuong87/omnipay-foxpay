@@ -17,11 +17,11 @@ class PurchaseRequest extends AbstractRequest
             'version',
             'merchantId',
             'terminalId',
-            'orderId',
+            'transactionId', // orderId
             'amount',
-            'currency',
-            'deviceId',
-            'description',
+//            'currency',
+//            'deviceId',
+            'description', // orderInfo
             'returnUrl',
             'notifyUrl'
         );
@@ -50,10 +50,17 @@ class PurchaseRequest extends AbstractRequest
 
         $order = $data['order'];
 
-        $body     = json_encode($order);
-        $response = $this->httpClient->request('GET', $endpoint . '/payment/checkout', [], $body)->getBody();
-        $result   = json_decode($response, true);
+        $endpoint .= '/payment/checkout?';
 
+        foreach ($order as $key => $value) {
+            $value = is_bool($value) ? ($value ? "true" : "false") : $value;
+            $endpoint .= $this->camelToSnake($key) . "=" . $value;
+            if ($key !== array_key_last($order)) {
+                $endpoint .= "&";
+            }
+        }
+
+        $result['redirectUrl'] = $endpoint;
         return $this->response = new PurchaseResponse($this, $result);
     }
 
@@ -61,14 +68,20 @@ class PurchaseRequest extends AbstractRequest
     {
         return [
             'version' => $this->getVersion(),
-            'creationTime' => (string)time(),
+//            'creationTime' => (string)time(),
             'merchantId' => $this->getMerchantId(),
             'terminalId' => $this->getTerminalId(),
             'orderId' => $this->getTransactionId(),
             'amount' => $this->getAmount(),
+            'deviceId' => "",
             'currency' => $this->getCurrency(),
+            'returnToken' => $this->getReturnToken(),
             'returnUrl' => $this->getReturnUrl(),
             'notifyUrl' => $this->getNotifyUrl()
         ];
+    }
+
+    public function camelToSnake($char) {
+        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $char));
     }
 }

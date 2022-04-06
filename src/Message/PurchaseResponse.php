@@ -9,8 +9,7 @@ class PurchaseResponse extends AbstractResponse
 {
     public function isSuccessful()
     {
-        $data = $this->getData();
-        return isset($data['txn']['result_code']) && $data['txn']['result_code'] == 200;
+        return true;
     }
 
     public function isPending()
@@ -35,7 +34,8 @@ class PurchaseResponse extends AbstractResponse
 
     public function getRedirectUrl()
     {
-        return $this->request->getEndpoint();
+        $data = $this->data;
+        return $data['redirectUrl'];
     }
 
     public function getRedirectData()

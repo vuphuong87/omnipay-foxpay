@@ -45,7 +45,7 @@ class QueryRequest extends AbstractRequest
         $order = $data['order'];
 
         $body     = json_encode($order);
-        $response = $this->httpClient->request('GET', $endpoint . '/payment/get-transaction', [], $body)->getBody();
+        $response = $this->httpClient->request('POST', $endpoint . '/payment/get-transaction', [], $body)->getBody();
         $result  = json_decode($response, true);
 
         return $this->response = new QueryResponse($this, $result);
@@ -57,7 +57,6 @@ class QueryRequest extends AbstractRequest
             'version' => $this->getVersion(),
             'merchantId' => $this->getMerchantId(),
             'terminalId' => $this->getTerminalId(),
-            'requestId' => (string)time(),
             'orderId' => $this->getTransactionId()
         ];
     }
