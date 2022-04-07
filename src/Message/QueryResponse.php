@@ -1,40 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Foxpay\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 
 class QueryResponse extends AbstractResponse
 {
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         $data = $this->getData();
-        return isset($data['txn']['result_code']) && $data['txn']['result_code'] == 200;
+
+        return isset($data['txn']['result_code']) && $data['txn']['result_code'] === "200";
     }
 
-    public function isPending()
+    public function isPending(): bool
     {
         return true;
     }
 
-    public function isRedirect()
+    public function isRedirect(): bool
     {
         return true;
     }
 
-    public function isTransparentRedirect()
+    public function isTransparentRedirect(): bool
     {
         return true;
-    }
-
-    public function getRedirectMethod()
-    {
-        return 'GET';
-    }
-
-    public function getRedirectUrl()
-    {
-        return null;
     }
 
     public function getRedirectData()
