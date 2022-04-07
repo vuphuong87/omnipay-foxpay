@@ -33,6 +33,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('version', $version);
     }
 
+    public function getReturnToken()
+    {
+        return $this->getParameter('returnToken');
+    }
+
+    public function setReturnToken($returnToken)
+    {
+        return $this->setParameter('returnToken', $returnToken);
+    }
+
     public function getMerchantId()
     {
         return $this->getParameter('merchantId');
