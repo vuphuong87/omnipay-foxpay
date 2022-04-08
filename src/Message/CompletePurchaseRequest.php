@@ -1,35 +1,31 @@
 <?php
 
-namespace Omnipay\Foxpay\Message;
+declare(strict_types=1);
 
+namespace Omnipay\Foxpay\Message;
 
 class CompletePurchaseRequest extends AbstractRequest
 {
-
-    public function getData()
+    public function getData(): array
     {
-        return [
-            'order_no' => $this->httpRequest->request->get('order_id'),
-            'state' => $this->httpRequest->request->get('result_code'),
-            'signature' => $this->httpRequest->request->get('signature'),
-            'computed_checksum' => $this->computedSignature($this->httpRequest->request->all()),
-            'method' => 'post',
-            'payment_method' => $this->httpRequest->request->get('payment_method')
-        ];
+        $order     = $this->httpRequest->request->all();
+        $signature = $order['signature'];
+
+        // remove it before compute signature
+        unset($order['signature']);
+
+        $order['computed_signature'] = $this->computeSignature(
+            implode('', array_values($order))
+        );
+
+        // add back
+        $order['signature'] = $signature;
+
+        return $order;
     }
 
-    public function sendData($data)
+    public function sendData($data): CompletePurchaseResponse
     {
         return new CompletePurchaseResponse($this, $data);
-    }
-
-    private function computedSignature($data)
-    {
-        $rawHash = '';
-        foreach ($data as $key => $value) {
-            $rawHash .= is_bool($value) ? ($value ? "true" : "false") : $value;
-        }
-
-        return hash('sha256', $rawHash.$this->getSecretKey());
     }
 }
