@@ -32,7 +32,7 @@ class QueryRequest extends AbstractRequest
             'orderId'    => $this->getTransactionId(),
         ];
 
-        $order['signature'] = $this->calculateSignature(
+        $order['signature'] = $this->computeSignature(
             implode('', array_values($order))
         );
 

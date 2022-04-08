@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Omnipay\Foxpay\Message;
 
+use DateTimeInterface;
 use Omnipay\Common\Message\AbstractRequest as BaseAbstractRequest;
 
 use function Symfony\Component\String\s;
@@ -55,6 +56,16 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->setParameter('returnToken', $returnToken);
     }
 
+    public function setValidityTime(?DateTimeInterface $validityTime): self
+    {
+        return $this->setParameter('validityTime', $validityTime);
+    }
+
+    public function getValidityTime(): ?DateTimeInterface
+    {
+        return $this->getParameter('validityTime');
+    }
+
     public function getSignature(): string
     {
         return $this->getParameter('signature');
@@ -85,7 +96,7 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $endpoint;
     }
 
-    protected function calculateSignature(string $rawHash): string
+    protected function computeSignature(string $rawHash): string
     {
         return hash('sha256', $rawHash . $this->getSecretKey());
     }

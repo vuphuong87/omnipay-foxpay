@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Omnipay\Foxpay\Message;
 
+use DateTime;
+use DateTimeZone;
 use Omnipay\Common\Exception\InvalidRequestException;
-
-use function Symfony\Component\String\s;
 
 class PurchaseRequest extends AbstractRequest
 {
     public const CHECKOUT_URI = '/payment/checkout';
+
+    public const TIMEZONE = 'Asia/Ho_Chi_Minh';
 
     /**
      * @throws InvalidRequestException
@@ -26,6 +28,10 @@ class PurchaseRequest extends AbstractRequest
             'description',
         );
 
+        $validityTime = $this->getValidityTime() ?: new DateTime('+24 hours');
+        $validityTime->setTimezone(new DateTimeZone(self::TIMEZONE));
+        $validityTime = $validityTime->format('dmY His');
+
         $order = [
             'version'     => $this->getVersion(),
             'merchantId'  => $this->getMerchantId(),
@@ -33,11 +39,13 @@ class PurchaseRequest extends AbstractRequest
             'orderId'     => $this->getTransactionId(),
             'amount'      => $this->getAmount(),
             'currency'    => $this->getCurrency(),
+            // does not support for Checkout API but QR API for now
+            //'expiredTime' => $validityTime,
             'returnToken' => $this->getReturnToken() ? 'true' : 'false',
             'returnUrl'   => $this->getReturnUrl(),
         ];
 
-        $order['signature'] = $this->calculateSignature(
+        $order['signature'] = $this->computeSignature(
             implode('', array_values($order))
         );
 
