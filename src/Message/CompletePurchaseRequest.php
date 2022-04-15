@@ -44,6 +44,9 @@ class CompletePurchaseRequest extends AbstractRequest
         // add back
         $order['signature'] = $signature;
 
+        // `state` is currently using for logging in case of order failed
+        $order['state'] = $order['result_code'];
+
         return $order;
     }
 
